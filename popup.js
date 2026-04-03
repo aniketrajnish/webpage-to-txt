@@ -1,3 +1,6 @@
+// Firefox uses browser.* namespace; fall back to chrome.* if needed
+var api = (typeof browser !== 'undefined') ? browser : chrome;
+
 function extractContent(mode) {
   var INCLUDED = {
     'h1':1,'h2':1,'h3':1,'h4':1,'h5':1,'h6':1,
@@ -259,12 +262,12 @@ async function injectAndProcess() {
   statusEl.textContent = 'status: extracting...';
   statusEl.className = 'status';
   try {
-    var tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    var tabs = await api.tabs.query({ active: true, currentWindow: true });
     if (!tabs || !tabs.length) { statusEl.textContent = 'status: cannot access this page'; statusEl.className = 'status error'; outputEl.value = ''; window.cachedHtml = ''; updateButtonStates(); return; }
     var tab = tabs[0];
     window.cachedTitle = tab.title || '';
     window.cachedUrl = tab.url || '';
-    var results = await chrome.scripting.executeScript({ target: { tabId: tab.id }, func: extractContent, args: [window.currentMode] });
+    var results = await api.scripting.executeScript({ target: { tabId: tab.id }, func: extractContent, args: [window.currentMode] });
     var extracted = (results && results[0] && results[0].result) || '';
     window.cachedHtml = extracted;
     if (!extracted) { statusEl.textContent = 'status: no content found'; statusEl.className = 'status'; outputEl.value = ''; updateButtonStates(); return; }
@@ -299,7 +302,9 @@ if (modeToggle) modeToggle.addEventListener('click', function(e) {
   if (newMode === window.currentMode) return;
   window.currentMode = newMode;
   setActiveButton('mode-toggle', 'data-mode', newMode);
-  if (typeof chrome !== 'undefined' && chrome.tabs && chrome.scripting) injectAndProcess();
+  if ((typeof browser !== 'undefined' && browser.tabs && browser.scripting) ||
+      (typeof chrome !== 'undefined' && chrome.tabs && chrome.scripting)) injectAndProcess();
+  if (typeof browser !== 'undefined' && browser.tabs && browser.scripting) injectAndProcess();
 });
 
 if (formatSelector) formatSelector.addEventListener('click', function(e) {
@@ -326,7 +331,8 @@ if (btnCopy) btnCopy.addEventListener('click', function() {
 });
 
 // --- Initial extraction ---
-if (typeof chrome !== 'undefined' && chrome.tabs && chrome.scripting) {
+if ((typeof browser !== 'undefined' && browser.tabs && browser.scripting) ||
+    (typeof chrome !== 'undefined' && chrome.tabs && chrome.scripting)) {
   injectAndProcess();
 }
 
