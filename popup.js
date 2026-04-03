@@ -1,3 +1,6 @@
+// safari: requires $99/year apple developer program to publish on app store.
+// local testing is free — run ./convert-to-safari.sh, build in xcode, enable in safari settings.
+
 function extractContent(mode) {
   var INCLUDED = {
     'h1':1,'h2':1,'h3':1,'h4':1,'h5':1,'h6':1,
