@@ -1,4 +1,4 @@
-// safari: requires $99/year apple developer program to publish on app store.
+// safari:$99/year apple developer program to publish on app store (baad me krege kabhi)
 // local testing is free — run ./convert-to-safari.sh, build in xcode, enable in safari settings.
 
 function extractContent(mode) {
