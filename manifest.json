@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Webpage To Text",
   "version": "1.0.0",
-  "description": "extract webpage content to markdown, plain text, or json",
+  "description": "webpage -> txt, json, md",
   "permissions": [
     "activeTab",
     "scripting",
