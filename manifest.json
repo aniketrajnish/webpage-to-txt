@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Webpage To Text",
+  "version": "1.0.0",
+  "description": "extract webpage content to markdown, plain text, or json",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "clipboardWrite"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "assets/ico-16.png",
+      "48": "assets/ico-48.png",
+      "128": "assets/ico-128.png"
+    }
+  },
+  "icons": {
+    "16": "assets/ico-16.png",
+    "48": "assets/ico-48.png",
+    "128": "assets/ico-128.png"
+  }
+}

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>webpage to text</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕷️</text></svg>">
+  <style>
+    :root {
+      --bg: #f4f4f1;
+      --panel: #fff;
+      --fg: #222;
+      --muted: #666;
+      --line: #cfcfcf;
+      --accent: #2E8B57;
+    }
+    [data-theme="dark"] {
+      --bg: #111;
+      --panel: #1a1a1a;
+      --fg: #e0e0e0;
+      --muted: #a0a0a0;
+      --line: #3a3a3a;
+      --accent: #2E8B57;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 400px;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 13px;
+      line-height: 1.4;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 12px; background: var(--panel);
+      border-bottom: 1px solid var(--line);
+      font-size: 14px; font-weight: 400;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 8px; }
+    .topbar .emoji { font-family: system-ui, "Apple Color Emoji", "Segoe UI Emoji"; font-size: 16px; }
+    .topbar .title { color: var(--accent); font-weight: 400; }
+    .gh {
+      display: flex; align-items: center; gap: 4px;
+      color: var(--muted); text-decoration: none; font-size: 12px;
+    }
+    .gh:hover { color: var(--fg); }
+    .gh svg { vertical-align: middle; }
+    .controls {
+      padding: 10px 12px; display: flex; flex-direction: column; gap: 8px;
+      background: var(--panel); border-bottom: 1px solid var(--line);
+    }
+    .control-row { display: flex; align-items: center; gap: 8px; }
+    .control-row label { color: var(--muted); font-size: 12px; min-width: 48px; }
+    .btn-group { display: flex; }
+    .btn-group button {
+      background: var(--panel); color: var(--fg);
+      border: 1px solid var(--line); border-radius: 0;
+      padding: 5px 10px; font: inherit; font-size: 12px;
+      cursor: pointer; text-transform: lowercase;
+      border-top-color: color-mix(in srgb, var(--line), #fff 30%);
+      border-left-color: color-mix(in srgb, var(--line), #fff 30%);
+      border-bottom-color: color-mix(in srgb, var(--line), #000 20%);
+      border-right-color: color-mix(in srgb, var(--line), #000 20%);
+      transition: background-color 0.15s ease;
+    }
+    .btn-group button + button { margin-left: -1px; }
+    .btn-group button:hover { background: var(--bg); }
+    .btn-group button:active {
+      border-top-color: color-mix(in srgb, var(--line), #000 20%);
+      border-left-color: color-mix(in srgb, var(--line), #000 20%);
+      border-bottom-color: color-mix(in srgb, var(--line), #fff 30%);
+      border-right-color: color-mix(in srgb, var(--line), #fff 30%);
+    }
+    .btn-group button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .output-area { padding: 0 12px; }
+    #output {
+      width: 100%; height: 220px;
+      background: var(--panel); color: var(--fg);
+      border: 1px solid var(--line); border-radius: 0;
+      padding: 10px; font-family: Courier New, monospace;
+      font-size: 12px; line-height: 1.4;
+      resize: none; outline: none;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .actions { padding: 10px 12px; display: flex; gap: 8px; }
+    .actions button {
+      background: var(--panel); color: var(--fg);
+      border: 1px solid var(--line); border-radius: 0;
+      padding: 7px 14px; font: inherit; font-size: 13px;
+      cursor: pointer; text-transform: lowercase;
+      border-top-color: color-mix(in srgb, var(--line), #fff 30%);
+      border-left-color: color-mix(in srgb, var(--line), #fff 30%);
+      border-bottom-color: color-mix(in srgb, var(--line), #000 20%);
+      border-right-color: color-mix(in srgb, var(--line), #000 20%);
+      transition: background-color 0.15s ease;
+    }
+    .actions button:hover { background: var(--bg); }
+    .actions button:active {
+      border-top-color: color-mix(in srgb, var(--line), #000 20%);
+      border-left-color: color-mix(in srgb, var(--line), #000 20%);
+      border-bottom-color: color-mix(in srgb, var(--line), #fff 30%);
+      border-right-color: color-mix(in srgb, var(--line), #fff 30%);
+    }
+    .actions button:disabled { color: var(--muted); cursor: not-allowed; opacity: 0.6; }
+    .status { padding: 6px 12px 10px; font-size: 12px; color: var(--muted); border-top: 1px dotted var(--line); }
+    .status.success { color: var(--accent); }
+    .status.error { color: #c0392b; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-left">
+      <img src="assets/ico-128.png" alt="🕷️" width="20" height="20" style="vertical-align: middle;">
+      <span class="title">webpage to text</span>
+    </div>
+    <a class="gh" href="https://github.com/aniketrajnish/webpage-to-txt" target="_blank" rel="noopener" title="view source on github">
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false" role="img"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      <span>github</span>
+    </a>
+  </div>
+  <div class="controls">
+    <div class="control-row">
+      <label>mode:</label>
+      <div class="btn-group" id="mode-toggle">
+        <button class="active" data-mode="all">all text</button>
+        <button data-mode="visible">visible only</button>
+      </div>
+    </div>
+    <div class="control-row">
+      <label>format:</label>
+      <div class="btn-group" id="format-selector">
+        <button class="active" data-format="txt">txt</button>
+        <button data-format="json">json</button>
+        <button data-format="md">md</button>
+      </div>
+    </div>
+  </div>
+  <div class="output-area">
+    <textarea id="output" readonly></textarea>
+  </div>
+  <div class="actions">
+    <button id="btn-download">download</button>
+    <button id="btn-copy">copy</button>
+  </div>
+  <div class="status" id="status">status: ready</div>
+  <script src="popup.js"></script>
+</body>
+</html>
